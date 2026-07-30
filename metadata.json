@@ -1,0 +1,6 @@
+{
+  "name": "Ultimate Romantic Experience",
+  "description": "A modern glassmorphic romantic application with interactive games, love counters, milestone timeline, memory gallery, audio visualizer, secret surprises, AI chatbot, and personalized ending.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
