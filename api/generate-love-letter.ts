@@ -48,7 +48,7 @@ Return ONLY valid JSON in this exact format (no markdown, no code blocks):
 }`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-1.5-flash",
+      model: "gemini-flash-latest",
       contents: prompt,
     });
 
