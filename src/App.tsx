@@ -4,6 +4,7 @@ import { ParticleBackground } from './components/ParticleBackground';
 import { Navbar } from './components/Navbar';
 import { LoveCounter } from './components/LoveCounter';
 import { RelationshipTimeline } from './components/RelationshipTimeline';
+import { LoveLetterGenerator } from './components/LoveLetterGenerator';
 import { SharedGallery } from './components/SharedGallery';
 import { WorldMap } from './components/WorldMap';
 import { ArcadeSuite } from './components/ArcadeSuite';
@@ -145,6 +146,9 @@ export default function App() {
 
         {/* 5. Relationship Milestone Timeline */}
         <RelationshipTimeline themeMode={themeMode} />
+
+        {/* 5.5 AI Love Letter Generator */}
+        <LoveLetterGenerator themeMode={themeMode} />
 
         {/* 6. Shared Media Gallery */}
         <SharedGallery themeMode={themeMode} />

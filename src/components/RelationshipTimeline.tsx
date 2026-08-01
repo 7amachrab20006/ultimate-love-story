@@ -145,6 +145,18 @@ export const RelationshipTimeline: React.FC<RelationshipTimelineProps> = ({ them
         </div>
       </div>
 
+      {/* Bottom Callout to AI Love Letter */}
+      <div className="mt-12 text-center">
+        <a
+          href="#ai-love-letter"
+          onClick={() => sounds.playClick()}
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-rose-500/20 via-rose-500/30 to-amber-500/20 border border-rose-500/40 text-rose-200 text-sm font-bold shadow-lg hover:border-rose-500 hover:scale-105 transition-all cursor-pointer"
+        >
+          <Sparkles className="w-4 h-4 text-amber-300" />
+          <span>Turn these milestone stories into a custom AI Love Letter</span>
+        </a>
+      </div>
+
       {/* Active Milestone Modal */}
       <AnimatePresence>
         {activeMilestone && (

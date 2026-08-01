@@ -31,6 +31,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navLinks = [
     { name: "Love Counter", href: "#love-counter" },
     { name: "Our Story", href: "#timeline" },
+    { name: "Love Letter AI", href: "#ai-love-letter" },
     { name: "Memories", href: "#gallery" },
     { name: "World Map", href: "#world-map" },
     { name: "Arcade Games", href: "#arcade" },
