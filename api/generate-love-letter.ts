@@ -1,4 +1,4 @@
-import { GoogleGenAI, Type } from "@google/genai";
+import { GoogleGenAI } from "@google/genai";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
@@ -8,13 +8,13 @@ export default async function handler(req: any, res: any) {
   try {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: "GEMINI_API_KEY missing" });
+      return res.status(500).json({ error: "GEMINI_API_KEY missing on server" });
     }
 
     const {
       recipient = "Asma",
       sender = "Mohamed",
-      tone = "Deeply Romantic & Heartfelt",
+      tone = "Deeply Romantic",
       milestones = [],
       customNote = "",
     } = req.body;
@@ -26,56 +26,45 @@ export default async function handler(req: any, res: any) {
         ? milestones
             .map(
               (m: any, i: number) =>
-                `${i + 1}. Title: "${m.title}" | Date: ${m.date} | Location: ${m.location} | Story: ${m.fullStory || m.shortDescription}`
+                `${i + 1}. "${m.title}" | ${m.date} | ${m.location} | ${m.fullStory || m.shortDescription}`
             )
             .join("\n")
-        : "General milestone memories of love, laughter, shared beach coffee dates, starry night walks, and wandering old city Medina streets together.";
+        : "Shared beach coffee dates, starry night walks, wandering old Medina streets.";
 
-    const prompt = `You are an exceptionally romantic, soulful, and poetic AI love letter writer. Write a deeply personal and moving love letter from ${sender} to ${recipient}.
+    const prompt = `Write a deeply romantic love letter from ${sender} to ${recipient}.
 
-Use the following real milestone timeline memories of ${recipient} and ${sender}:
----
+Tone: ${tone}
+${customNote ? `Personal note to weave in: "${customNote}"` : ""}
+
+Milestone memories:
 ${milestonesSummary}
----
 
-Selected Tone/Style: ${tone}
-${customNote ? `Additional personal wish/note to weave in: "${customNote}"` : ""}
-
-Instructions:
-1. Weave the real milestone memories naturally into a cohesive, touching narrative of their journey together.
-2. The letter should feel intimately personal, poetic, and genuine.
-3. Express profound devotion, appreciation, passion, and excitement for their shared future.
-4. Include a romantic title and a short poetical opening quote.
-5. Highlight 3 key milestone moments mentioned in the letter.`;
+Return ONLY valid JSON in this exact format (no markdown, no code blocks):
+{
+  "title": "romantic title",
+  "quote": "one line romantic quote",
+  "letter": "the full letter in elegant paragraphs",
+  "highlights": ["highlight 1", "highlight 2", "highlight 3"]
+}`;
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
+      model: "gemini-1.5-flash",
       contents: prompt,
-      config: {
-        responseMimeType: "application/json",
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            title: { type: Type.STRING },
-            quote: { type: Type.STRING },
-            letter: { type: Type.STRING },
-            highlights: {
-              type: Type.ARRAY,
-              items: { type: Type.STRING },
-            },
-          },
-          required: ["title", "quote", "letter", "highlights"],
-        },
-      },
     });
 
-    const resultData = JSON.parse(response.text || "{}");
+    let text = response.text || "{}";
+    // Strip markdown code blocks if Gemini wraps the JSON
+    text = text.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+    
+    const resultData = JSON.parse(text);
     return res.status(200).json(resultData);
   } catch (err: any) {
-    console.error("Error generating love letter:", err);
+    console.error("=== ERROR DETAILS ===");
+    console.error(err);
     return res.status(500).json({
       error: "Failed to generate love letter",
       details: err.message || String(err),
+      stack: err.stack,
     });
   }
 }
